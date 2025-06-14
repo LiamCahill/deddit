@@ -13,7 +13,7 @@ const CreateCommunityModal = ({isOpen, onClose}: CreateCommunityModalProps) => {
     const [description, setDescription] = useState("")
     const [error, setError] = useState("")
     const [isLoading, setIsLoading] = useState(false)
-    const createSubreddit = useMutation(api.subreddit.create);
+    //const createSubreddit = useMutation(api.subreddit.create);
 
 
     if(!isOpen) return null
@@ -65,12 +65,21 @@ const CreateCommunityModal = ({isOpen, onClose}: CreateCommunityModalProps) => {
                 >
                     Cancel
                     </button>
+
                     <button
                     type="submit"
                     className="create-button" 
                     disabled={isLoading}
                 >
                     {isLoading? "Creating..." : "Create Community"}
+                    </button>
+
+                    <button
+                    type="button"
+                    className="lucky-button" 
+                    disabled={isLoading}
+                >
+                    I'm feeling lucky!
                     </button>
 
                 </div>

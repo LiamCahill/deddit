@@ -137,6 +137,15 @@ form {
   height: 32px;
 }
 
+.lucky-button {
+  padding: 4px 16px;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: 20px;
+  cursor: pointer;
+  height: 32px;
+}
+
 .cancel-button {
   background: none;
   border: 1px solid #0079d3;
@@ -148,6 +157,13 @@ form {
   border: none;
   color: white;
 }
+
+.lucky-button {
+  background-color: #FFD700;
+  border: none;
+  color: black;
+}
+
 
 .cancel-button:hover {
   background-color: rgba(0, 121, 211, 0.05);
