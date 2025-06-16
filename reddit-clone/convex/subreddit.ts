@@ -1,5 +1,5 @@
 import { describe } from "node:test"
-import {mutation} from "./_generated/server"
+import {mutation, query} from "./_generated/server"
 import { getCurrentUserOrThrow } from "./users"
 import {ConvexError, v} from "convex/values"
 
@@ -20,5 +20,17 @@ export const create = mutation({
             description: args.description,
             authorId: user._id
         })
+    }
+})
+
+export const get = query({
+    args: {name: v.string()},
+    handler: async(ctx, args) => {
+        const subreddit = await ctx.db
+        .query("subreddit")
+        .filter((q) => q.eq(q.field("name"), args.name))
+        .unique();
+        if(!subreddit) throw new ConvexError({message: "Subreddit not found."})
+        return subreddit
     }
 })
