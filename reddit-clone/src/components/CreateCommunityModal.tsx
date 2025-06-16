@@ -13,12 +13,42 @@ const CreateCommunityModal = ({isOpen, onClose}: CreateCommunityModalProps) => {
     const [description, setDescription] = useState("")
     const [error, setError] = useState("")
     const [isLoading, setIsLoading] = useState(false)
-    //const createSubreddit = useMutation(api.subreddit.create);
+    const createSubreddit = useMutation(api.subreddit.create);
 
 
     if(!isOpen) return null
 
-    const handleSubmit = async (e: React.FormEvent) => {}
+    const handleSubmit = async (e: React.FormEvent) => {
+        const minLength = 3;
+        const maxLength = 21;
+        e.preventDefault()
+        setError("")
+
+        if(!name){
+            setError("Community name is required.")
+            return
+        }
+
+        if(name.length < minLength || name.length > maxLength) {
+            const errMsg = "Name must be between " + minLength + " and " + maxLength
+            setError(errMsg)
+            return
+        }
+
+        if (!/^[a-zA-Z0-9_]+$/.test(name)) {
+            setError("Community can only contain letters, numbers and underscores.")
+            return
+        }
+
+        setIsLoading(true)
+        await createSubreddit({name, description})
+        .then((result) => {
+            console.log(result)
+            onClose()
+        }).catch((err) => {
+            setError(`Failed to create community. ${err.data.message}`)
+        }).finally(() => setIsLoading(false));
+    }
 
     return <>
         <div className="modal-overlay" onClick={onClose}/>

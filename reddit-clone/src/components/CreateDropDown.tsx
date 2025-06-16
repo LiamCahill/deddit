@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FaPlus } from "react-icons/fa";
+import { FaAddressCard, FaPlus } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
 import CreateCommunityModal from "./CreateCommunityModal";
 import "../styles/CreateDropdown.css";
@@ -40,7 +40,7 @@ const CreateDropdown = ({ isOpen, onClose }: CreateDropdownProps) => {
           {currentSubreddit && (
             <button className="dropdown-option" onClick={handleCreatePost}>
               <div className="option-icon">
-                <FaPlus />
+                <FaAddressCard />
               </div>
               <div className="option-content">
                 <span className="option-title">Post</span>

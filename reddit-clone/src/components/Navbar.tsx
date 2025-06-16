@@ -17,7 +17,7 @@ const Navbar = () => {
         <Link to="/" className="logo-link">
           <div className="logo-container">
             <FaReddit className="reddit-icon" />
-            <span className="site-name">reddit</span>
+            <span className="site-name">Cahill Captures</span>
           </div>
         </Link>
 
