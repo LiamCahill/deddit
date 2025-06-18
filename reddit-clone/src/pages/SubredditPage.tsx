@@ -13,7 +13,7 @@ const SubredditPage = () => {
     return <div className="content-container">
       <div className="not-found">
         <h1>Subreddit not found</h1>
-        <p>The subreddit r/{subredditName} does not exist.</p>
+        <p>The subreddit r/{subredditName} does not exist. (Try creating it!)</p>
       </div>
     </div>
   }
@@ -22,6 +22,11 @@ const SubredditPage = () => {
       <div className="subreddit-banner">
         <h1>r/{subreddit.name}</h1>
         {subreddit.description && <p>{subreddit.description}</p>}
+      </div>
+      <div className="posts-container">
+        <div className="no-posts">
+          <p>No posts yet. Be the first to post!</p>
+        </div>
       </div>
     </div>;
   };

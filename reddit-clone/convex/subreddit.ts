@@ -30,7 +30,7 @@ export const get = query({
         .query("subreddit")
         .filter((q) => q.eq(q.field("name"), args.name))
         .unique();
-        if(!subreddit) throw new ConvexError({message: "Subreddit not found."})
+        if(!subreddit) return null
         return subreddit
     }
 })
