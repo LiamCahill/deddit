@@ -1,28 +1,27 @@
-import {FaRegCommentAlt, FaTrash} from "react-icons/fa"
-import {TbArrowBigUp, TbArrowBigDown} from "react-icons/tb"
-import {Link, useNavigate} from "react-router-dom"
-import { useMutation, useQuery } from "convex/react"
-import {api} from "../../convex_generated/api"
-import {Id} from "../../convex_generated/dataModel"
-import {useUser} from "@clerk/clerk-react"
-import "../styles/PostCard.css"
-import { create } from "domain"
-import { userPosts } from "../../convex/post"
-import { useState } from "react"
+import { FaRegCommentAlt, FaTrash } from "react-icons/fa";
+import { TbArrowBigUp, TbArrowBigDown } from "react-icons/tb";
+import { Link, useNavigate } from "react-router-dom";
+import { useMutation, usePaginatedQuery, useQuery } from "convex/react";
+import { api } from "../../convex/_generated/api";
+// import { Id } from "../../convex/_generated/dataModel";
+import { useUser } from "@clerk/clerk-react";
+//import Comment from "./Comment";
+import "../styles/PostCard.css";
+import { useState } from "react";
 
 interface Post {
-    _id: Id<"post">,
-    subject: string;
-    body: string;
-    _creationTime: number;
-    author_id: string,
-    imageUrl?: string
-    author?: {
-        username: string
-    }
-    subreddit?: {
-        name: string
-    }
+  _id: Id<"post">;
+  subject: string;
+  body: string;
+  _creationTime: number;
+  authorId: string;
+  imageUrl?: string;
+  author?: {
+    username: string;
+  };
+  subreddit?: {
+    name: string;
+  };
 }
 interface PostCardProps {
     post: Post;
@@ -34,7 +33,7 @@ interface PostHeaderProps {
     author?: {username: string}
     subreddit: {name: string}
     showSubreddit: boolean
-    creationtime: number
+    creationTime: number
 }
 
 interface PostContentProps {
@@ -97,7 +96,7 @@ const PostContent = ({subject, body, image, expandedView}: PostContentProps) => 
     );
 };
 
-const PostCard = ({post, showSubreddit, expandedView}: PostCardProps) => {
+const PostCard = ({post, showSubreddit=false, expandedView=false}: PostCardProps) => {
     const [showComments, setShowComments] = useState(expandedView)
     const navigate = useNavigate()
     const {user} = useUser();
@@ -105,16 +104,37 @@ const PostCard = ({post, showSubreddit, expandedView}: PostCardProps) => {
 
     const handleComment = () => {}
 
-    const handleDelete = () => {
-
-    }
+    const handleDelete = () => {}
 
     const handleSubmit = (content: string) => {}
 
-    return <div className={`post-card ${expandedView ? "expanded" : ""}`}>
-        <div className="post=content">
-            <PostHeader />
-            <PostContent />
+    return (
+    <div className={`post-card ${expandedView ? "expanded" : ""}`}>
+        <div className="post-content">
+            <PostHeader 
+            author={post.author} 
+            subreddit={post.subreddit?? {name: "deleted"}} 
+            showSubreddit={showSubreddit} 
+            creationTime={post._creationTime}/>
+            <PostContent 
+            subject={post.subject} 
+            body={post.body} 
+            image={post.imageUrl} 
+            expandedView={expandedView}
+            />
+            <div className="post-actions">
+                <button className="action-button" onClick={handleComment}>
+                    <FaRegCommentAlt />
+                    <span>0 Comments</span>
+                </button>
+                {ownedByCurrentUser && <button className="action-button delete-button" onClick={handleDelete}>
+                    <FaTrash />
+                    <span>Delete</span>
+                    </button>}
+            </div>
         </div>
     </div>
-}
+    );
+};
+
+export default PostCard;
