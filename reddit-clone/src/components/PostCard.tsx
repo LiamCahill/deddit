@@ -197,7 +197,7 @@ const PostCard = ({post, showSubreddit=false, expandedView=false}: PostCardProps
             <div className="post-actions">
                 <button className="action-button" onClick={handleComment}>
                     <FaRegCommentAlt />
-                    <span>0 Comments</span>
+                    <span>{commentCount ?? 0} Comments</span>
                 </button>
                 {ownedByCurrentUser && <button className="action-button delete-button" onClick={handleDelete}>
                     <FaTrash />
