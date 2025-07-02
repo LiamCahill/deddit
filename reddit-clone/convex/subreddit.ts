@@ -2,6 +2,7 @@ import { describe } from "node:test"
 import {mutation, query} from "./_generated/server"
 import { getCurrentUserOrThrow } from "./users"
 import {ConvexError, v} from "convex/values"
+import { getEnrichedPosts } from "./post"
 
 export const create = mutation({
     args: {
@@ -31,6 +32,15 @@ export const get = query({
         .filter((q) => q.eq(q.field("name"), args.name))
         .unique();
         if(!subreddit) return null
-        return subreddit
+
+        //get all the posts for the current subreddit
+        const posts = await ctx.db
+        .query("post")
+        .withIndex("bySubreddit", (q) => q.eq("subreddit", subreddit._id))
+        .collect();
+
+        const enrichedPosts = await getEnrichedPosts(ctx, posts)
+
+        return {...subreddit, posts: enrichedPosts};
     }
 })

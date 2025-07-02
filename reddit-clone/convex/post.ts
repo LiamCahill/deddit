@@ -60,7 +60,7 @@ async function getEnrichedPost(ctx: QueryCtx, post: Doc<"post">): Promise<Enrich
     }
 }
 
-async function getEnrichedPosts(
+export async function getEnrichedPosts(
     ctx: QueryCtx, 
     posts: Doc<"post">[]
 ): Promise<EnrichedPost[]> {

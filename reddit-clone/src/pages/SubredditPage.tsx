@@ -2,6 +2,7 @@ import "../styles/SubredditPage.css";
 import { useParams } from "react-router-dom";
 import { useQuery } from "convex/react";
 import {api} from "../../convex/_generated/api"
+import PostCard from "../components/PostCard";
 
 const SubredditPage = () => {
   const {subredditName} = useParams()
@@ -18,17 +19,25 @@ const SubredditPage = () => {
     </div>
   }
 
-    return <div className="content-container">
+  return (
+    <div className="content-container">
       <div className="subreddit-banner">
         <h1>r/{subreddit.name}</h1>
         {subreddit.description && <p>{subreddit.description}</p>}
       </div>
       <div className="posts-container">
-        <div className="no-posts">
-          <p>No posts yet. Be the first to post!</p>
-        </div>
+        {subreddit.posts?.length === 0 ? (
+          <div className="no-posts">
+            <p>No posts yet. Be the first to post</p>
+          </div>
+        ) : (
+          subreddit.posts?.map((post) => (
+            <PostCard key={post._id} post={post} />
+          ))
+        )}        
       </div>
-    </div>;
-  };
-  
-  export default SubredditPage;
+    </div>
+  );
+};
+
+export default SubredditPage;
