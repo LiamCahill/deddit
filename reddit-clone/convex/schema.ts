@@ -22,5 +22,10 @@ export default defineSchema({
         image: v.optional(v.id("_storage")) //optional, will be handled later
     })
     .index("bySubreddit", ["subreddit"])
-    .index("byAuthor", ["authorId"])
+    .index("byAuthor", ["authorId"]),
+    comments: defineTable({
+        content: v.string(),
+        postId: v.id("post"),
+        authorId: v.id("users")
+    }).index("byPost", ["postId"])
 });
