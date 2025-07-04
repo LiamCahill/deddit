@@ -74,5 +74,5 @@ export const getVoteCount = query({
         const downvotes = await counts.count(convexToJson, voteKey(args.postId, "downvote"))
 
         return {upvotes, downvotes, total: upvotes - downvotes};
-    };
+    }
 })

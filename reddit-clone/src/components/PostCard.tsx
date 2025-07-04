@@ -9,6 +9,7 @@ import "../styles/PostCard.css";
 import { useState } from "react";
 import Comment from "./Comment";
 import { useFormStatus } from "react-dom";
+import { hasDownvoted, hasUpvoted } from "../../convex/vote";
 
 interface Post {
   _id: Id<"post">;
@@ -50,6 +51,33 @@ interface CommentSectionProps {
     onSubmit: (content: string) => void;
     signedIn: boolean,
 }
+
+interface VoteButtonsProps {
+    postId: Id<"post">;
+    voteCounts: {total: number; upvotes: number; downvotes: number} | undefined;
+    hasUpvoted: boolean | undefined;
+    hasDownvotesd: boolean | undefined;
+    onUpvote: () => void;
+    downUpvote: () => void;
+}
+
+const VoteButtons = ({voteCounts, hasUpvoted, hasDownvoted, onUpvote, onDownvote}: VoteButtonProps) => {
+    return <div className="post-votes">
+        <span className="vote-count upvote-count">{voteCounts?.upvotes ?? 0}</span>
+        <button className={`votebutton ${hasUpvoted ? "voted" : ""}`}>
+            <TbArrowBigUp size={24} />
+        </button>
+
+        <span className="vote-cout total-count">{voteCounts?.total ?? 0}</span>
+
+        <span className="vote-count downvote-count">{voteCounts?.downvotes ?? 0}</span>
+        <button className={`votebutton ${hasDownvoted ? "voted" : ""}`}>
+            <TbArrowBigDown size={24} />
+        </button>
+
+   
+    </div>
+};
 
 const PostHeader = ({author, subreddit, showSubreddit, creationTime}: PostHeaderProps) => {
     return (
