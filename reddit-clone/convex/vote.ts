@@ -31,8 +31,48 @@ export function createToggleVoteMutation(voteType: VoteType){
             .query(oppositeVoteType).withIndex("byPost", (q) => q.eq("postId", args.postId))
             .filter((q) => q.eq(q.field("userId"), user._id))
             .unique();
-        }
 
-
-    })
+            if (existingOppositeVote) {
+                await ctx.db.delete(existingOppositeVote._id);
+                await counts.dec(ctx, voteKey(args.postId, oppositeVoteType));
+            }    
+            await ctx.db.insert(voteType, {
+                postId: args.postId,
+                userId: user._id
+            })
+              await counts.inc(ctx, voteKey(args.postId, voteType))
+        },
+    });
 }
+
+export function createHasVotedQuery(voteType: VoteType) {
+    return query ({
+        args: {postId: v.id("post")},
+        handler: async (ctx, args) => {
+            const user = await getCurrentUser(ctx);
+            if(!user) return false;
+
+            const vote = await ctx.db
+            .query(voteType).withIndex("byPost", (q) => q.eq("postId", args.postId))
+            .filter((q) => q.eq(q.field("userId"), user._id))
+            .unique();
+
+            return !!vote //converts this into boolean with !!
+        },
+    });
+}
+
+export const toggleUpvote = createToggleVoteMutation("upvote")
+export const toggleDownvote = createToggleVoteMutation("downvote")
+export const hasUpvoted = createHasVotedQuery("upvote")
+export const hasDownvoted = createHasVotedQuery("downvote")
+
+export const getVoteCount = query({
+    args:{postId: v.id("post")},
+    handler: async (convexToJson, args) => {
+        const upvotes = await counts.count(convexToJson, voteKey(args.postId, "upvote"))
+        const downvotes = await counts.count(convexToJson, voteKey(args.postId, "downvote"))
+
+        return {upvotes, downvotes, total: upvotes - downvotes};
+    };
+})
