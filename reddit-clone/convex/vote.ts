@@ -67,7 +67,7 @@ export const toggleDownvote = createToggleVoteMutation("downvote")
 export const hasUpvoted = createHasVotedQuery("upvote")
 export const hasDownvoted = createHasVotedQuery("downvote")
 
-export const getVoteCount = query({
+export const getVoteCounts = query({
     args:{postId: v.id("post")},
     handler: async (convexToJson, args) => {
         const upvotes = await counts.count(convexToJson, voteKey(args.postId, "upvote"))

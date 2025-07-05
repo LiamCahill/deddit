@@ -9,7 +9,7 @@ import "../styles/PostCard.css";
 import { useState } from "react";
 import Comment from "./Comment";
 import { useFormStatus } from "react-dom";
-import { hasDownvoted, hasUpvoted } from "../../convex/vote";
+import { hasDownvoted, hasUpvoted, toggleUpvote } from "../../convex/vote";
 
 interface Post {
   _id: Id<"post">;
@@ -64,14 +64,14 @@ interface VoteButtonsProps {
 const VoteButtons = ({voteCounts, hasUpvoted, hasDownvoted, onUpvote, onDownvote}: VoteButtonProps) => {
     return <div className="post-votes">
         <span className="vote-count upvote-count">{voteCounts?.upvotes ?? 0}</span>
-        <button className={`votebutton ${hasUpvoted ? "voted" : ""}`}>
+        <button className={`votebutton ${hasUpvoted ? "voted" : ""}`} onClick={onUpvote}>
             <TbArrowBigUp size={24} />
         </button>
 
         <span className="vote-cout total-count">{voteCounts?.total ?? 0}</span>
 
         <span className="vote-count downvote-count">{voteCounts?.downvotes ?? 0}</span>
-        <button className={`votebutton ${hasDownvoted ? "voted" : ""}`}>
+        <button className={`votebutton ${hasDownvoted ? "voted" : ""}`} onClick={onDownvote}>
             <TbArrowBigDown size={24} />
         </button>
 
@@ -177,9 +177,18 @@ const PostCard = ({post, showSubreddit=false, expandedView=false}: PostCardProps
     const deletePost = useMutation(api.post.deletePost)
 
     const createComment = useMutation(api.comments.create);
+    const toggleUpvote = useMutation(api.vote.toggleUpvote)
+    const toggleDownvote = useMutation(api.vote.toggleDownvote)
+
+    const voteCounts = useQuery(api.vote.getVoteCounts, {postId: post._id})
+    const hasUpvoted = useQuery(api.vote.hasUpvoted, {postId: post._id})
+    const hasDownvoted = useQuery(api.vote.hasDownvoted, {postId: post._id})
 
     const comments = useQuery(api.comments.getComments, {postId: post._id})
-    const commentCount = useQuery(api.comments.getCommentCount, {postId: post._id})
+    const commentCount = useQuery(api.comments.getCommentCount, {postId: post._id});
+
+    const onUpvote = () => toggleUpvote({postId: post._id})
+    const onDownvote = () => toggleDownvote({postId: post._id})
     
     const handleComment = () => {
         if(!expandedView) {
@@ -210,6 +219,13 @@ const PostCard = ({post, showSubreddit=false, expandedView=false}: PostCardProps
 
     return (
     <div className={`post-card ${expandedView ? "expanded" : ""}`}>
+        <VoteButtons 
+            voteCounts={voteCounts}
+            hasUpvoted={hasUpvoted}
+            hasDownvoted={hasDownvoted}
+            onUpvote={user ? onUpvote : () => {}}
+            onDownvote={user ? onDownvote : () => {}}
+        />
         <div className="post-content">
             <PostHeader 
             author={post.author} 
