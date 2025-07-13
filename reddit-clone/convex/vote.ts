@@ -76,3 +76,5 @@ export const getVoteCounts = query({
         return {upvotes, downvotes, total: upvotes - downvotes};
     }
 })
+
+export default voteKey

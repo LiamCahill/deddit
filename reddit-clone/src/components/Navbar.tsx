@@ -3,6 +3,7 @@ import { SignInButton, UserButton, useUser } from "@clerk/clerk-react";
 import { Authenticated, Unauthenticated } from "convex/react";
 import { Link, useNavigate } from "react-router-dom";
 import CreateDropdown from "./CreateDropDown";
+import SearchBar from "./SearchBar";
 import { useState } from "react";
 import "../styles/Navbar.css";
 
@@ -20,6 +21,7 @@ const Navbar = () => {
             <span className="site-name">Cahill Captures</span>
           </div>
         </Link>
+        <SearchBar />
 
         <div className="nav-actions">
           <Unauthenticated>
